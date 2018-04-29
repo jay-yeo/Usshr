@@ -3,6 +3,7 @@
 # Credits: Jay Yeo - github.com/jay-yeo
 
 import os
+import re
 import paramiko
 
 # SSH Connection Class
@@ -19,7 +20,7 @@ class Connection:
 # SSH Messaging Functions Class
 class Messenger:
 
-    # Constructor
+    # Initialization
     def __init__(self, Connection):
         self.Connection = Connection
 
@@ -36,7 +37,6 @@ class Messenger:
             # Send SSH Command
             stdin, stdout, stderr = client.exec_command(message)
 
-            print('Command Sent!')
         except:
             print('Fuck!')
 
@@ -56,7 +56,6 @@ class Messenger:
             stdin, stdout, stderr = client.exec_command(message)
             reply = stdout.readlines()
 
-            print('Command Sent!')
             return reply
         except:
             print('Fuck!')
@@ -67,13 +66,16 @@ class Messenger:
 # Player Class
 class Player:
 
-    # Constructor
+    # Initialization
     def __init__(self, Connection):
         # Connection Details
         self.cnx = Connection
         self.messenger = Messenger(self.cnx)
+        self.playlist = []
 
     def playback(self):
+        print("Usshr - Theatre")
+        print('------------------')
 
         command = ""
 
@@ -84,24 +86,25 @@ class Player:
             print('[x] Start Projector')
             print('[l] List Movies')
             print('[q] Quit')
+            print("")
 
             # Ask for the user's choice.
-            command = input('Command: ')
-
-            # List Movies
+            command = input('Enter Command: ')
             if command == 'l':
-                list_string = "find *.mkv *.mp4 /home/pi/Videos "
-                movie_list = self.messenger.sendReply(list_string)
-                print('All Movies:')
-                if '.mkv' or '.mp4' in movie_list:
-                    for movie in movie_list:
-                        print(movie)
+
+                self.listMovies()
 
             # Play Movies
             elif command == 'x':
-                movie = input('Enter Movie: ')
-                print('Starting "' + str(movie) + '"')
-                self.play(movie)
+                movieInput = input('Enter Movie: ')
+
+                for movie in self.playlist:
+                    if str(movie["id"]) == movieInput:
+                        print("Starting " + str(movie["movieFile"]) + " ...")
+                        self.play(movie["movieURI"])
+                    else:
+                        print("Invalid Movie ID. Try again!")
+
             # Quit
             elif command == 'q':
                 print('Goodbye!')
@@ -147,10 +150,34 @@ class Player:
             else:
                 print("Incorrect Command")
 
+    # List Movies
+    def listMovies(self):
+
+            # Clear old list data
+            self.playlist.clear()
+
+            # Get directory list
+            list_string = "ls /home/pi/Videos *.mkv *.mp4"
+            movie_list = self.messenger.sendReply(list_string)
+
+            # Get list of video files
+            for index, movie in enumerate(movie_list):
+                if index > 0:
+                    movieDetails = {"id": index, "movieURI": re.sub('\n', '', movie), "movieFile": os.path.basename(re.sub('\n', '', movie))}
+                    self.playlist.append(movieDetails)
+
+            # Display list of video files
+            print('\nAll Movies:')
+            for movie in self.playlist:
+                outputString = str(movie["id"]) + ": " + movie["movieFile"]
+                print(outputString)
+
+            print('\n------------------')
+            return self.playlist
+
 
 # Run Script
 if __name__ == "__main__":
-    print("Usshr - Theatre")
 
     # CONFIG - Add your device authorization details
     host = "192.168.0.87"
