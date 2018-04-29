@@ -197,10 +197,10 @@ class Player:
 if __name__ == "__main__":
 
     # CONFIG - Add your device authorization details
-    host = "192.168.0.87"
+    host = "192.168.0.1"
     port = 22
     user = "pi"
-    password = "Budap3st1!"
+    password = "password"
 
     # New connection to RaspberryPi
     deviceConnection = Connection(host, port, user, password)
