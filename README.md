@@ -2,7 +2,8 @@
 
 **A simple script to play and control media on the RaspberryPi over SSH.**
 
-The script opens a simple commandline interface and allows you to play and control media on your RaspberryPi. This basic script if perfect for situations where you need to remotely control content playing via the RaspberryPi.
+The script opens a simple commandline interface and allows you to play and control media on your RaspberryPi.
+<br>This basic script is perfect for situations where you need to remotely control content playing via the RaspberryPi.
 
 **Installation + Configuration**
 <br>To install, zip or clone the project to a directory of your choice.
