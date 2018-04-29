@@ -67,9 +67,10 @@ class Messenger:
 class Player:
 
     # Initialization
-    def __init__(self, Connection):
+    def __init__(self, Connection, mediaDirectory):
         # Connection Details
         self.cnx = Connection
+        self.dir = mediaDirectory
         self.messenger = Messenger(self.cnx)
         self.playlist = []
 
@@ -138,17 +139,17 @@ class Player:
             print("[q] Quit")
 
             # Ask for user choice
-            command = input("Command: ")
+            command = input("\nEnter Command: ")
 
             # Respond to user choice
             if command == "p":
                 self.messenger.send("dbuscontrol.sh pause")
-                print("Pausing Playback")
+                print("Pausing Playback\n")
             elif command == "q":
                 self.messenger.send("pkill omxplayer")
-                print("Goodbye!")
+                print("Goodbye!\n")
             else:
-                print("Incorrect Command")
+                print("Incorrect Command\n")
 
     # List Movies
     def listMovies(self):
@@ -157,7 +158,7 @@ class Player:
             self.playlist.clear()
 
             # Get directory list
-            list_string = "ls /home/pi/Videos *.mkv *.mp4"
+            list_string = "ls " + self.dir + " *.mkv *.mp4"
             movie_list = self.messenger.sendReply(list_string)
 
             # Get list of video files
@@ -187,7 +188,8 @@ if __name__ == "__main__":
 
     # New connection to RaspberryPi
     deviceConnection = Connection(host, port, user, password)
+    mediaDirectory = "/home/pi/Videos"
 
     # Start playback
-    Player(deviceConnection).playback()
+    Player(deviceConnection, mediaDirectory).playback()
 
