@@ -2,14 +2,16 @@
 # Usshr - A simple script to play media on the RaspberryPi over SSH.
 # Credits: Jay Yeo - github.com/jay-yeo
 
+
 import os
 import re
 import paramiko
 
+
 # SSH Connection Class
 class Connection:
 
-    # Constructor
+    # Initialization
     def __init__(self, hostname, portNum, username, password):
         self.host = hostname
         self.port = portNum
@@ -38,7 +40,7 @@ class Messenger:
             stdin, stdout, stderr = client.exec_command(message)
 
         except:
-            print('Fuck!')
+            print('ERROR: Message Not Sent!')
 
         client.close()
 
@@ -58,7 +60,7 @@ class Messenger:
 
             return reply
         except:
-            print('Fuck!')
+            print('ERROR: Message Not Sent!')
 
         client.close()
 
@@ -70,7 +72,7 @@ class Player:
     def __init__(self, Connection, mediaDirectory):
         # Connection Details
         self.cnx = Connection
-        self.dir = mediaDirectory
+        self.directory = mediaDirectory
         self.messenger = Messenger(self.cnx)
         self.playlist = []
 
@@ -91,20 +93,15 @@ class Player:
 
             # Ask for the user's choice.
             command = input('Enter Command: ')
+
+            # List all playable media files in mediaDirectory
             if command == 'l':
 
                 self.listMovies()
 
-            # Play Movies
+            # Play Movie
             elif command == 'x':
-                movieInput = input('Enter Movie: ')
-
-                for movie in self.playlist:
-                    if str(movie["id"]) == movieInput:
-                        print("Starting " + str(movie["movieFile"]) + " ...")
-                        self.play(movie["movieURI"])
-                    else:
-                        print("Invalid Movie ID. Try again!")
+                self.playMovie()
 
             # Quit
             elif command == 'q':
@@ -115,13 +112,12 @@ class Player:
                 print('Incorrect Command')
 
     # Play Function
-    def play(self, videoURL):
-
-        play_string = 'omxplayer --no-keys -o hdmi -b ' + '"' + str(videoURL) + '" &'
+    def play(self, videoURI):
+        play_string = 'omxplayer --no-keys -o hdmi -b ' + '"' + str(self.directory + videoURI) + '" &'
         self.messenger.send(play_string)
         self.playbackControls()
 
-    # Terminal Playback Controls
+    # Playback Controls
     def playbackControls(self):
 
         # Give the user some context.
@@ -158,26 +154,46 @@ class Player:
             self.playlist.clear()
 
             # Get directory list
-            list_string = "ls " + self.dir + " *.mkv *.mp4"
+            list_string = "ls " + self.directory + " *.mkv *.mp4"
             movie_list = self.messenger.sendReply(list_string)
+
 
             # Get list of video files
             for index, movie in enumerate(movie_list):
+                # Skip first entry which is the directory url - eg. "/home/pi/Videos"
                 if index > 0:
                     movieDetails = {"id": index, "movieURI": re.sub('\n', '', movie), "movieFile": os.path.basename(re.sub('\n', '', movie))}
                     self.playlist.append(movieDetails)
 
             # Display list of video files
             print('\nAll Movies:')
-            for movie in self.playlist:
-                outputString = str(movie["id"]) + ": " + movie["movieFile"]
-                print(outputString)
+            if len(self.playlist) > 0:
+                for movie in self.playlist:
+                    outputString = str(movie["id"]) + ": " + movie["movieFile"]
+                    print(outputString)
+            else:
+                print("No playable files in directory...")
 
             print('\n------------------')
             return self.playlist
 
+    def playMovie(self):
+        playable = False
+        movieFile = ""
+        movieInput = input('Enter Movie: ')
 
-# Run Script
+        for movie in self.playlist:
+            if str(movie["id"]) == movieInput:
+                movieFile = movie["movieURI"]
+                playable = True
+
+        if playable == True:
+            print("\nStarting " + str(movieFile) + " ...")
+            self.play(movieFile)
+        else:
+            print("Sorry, invalid movie selection. Try again!\n")
+
+# Run Usshr Script
 if __name__ == "__main__":
 
     # CONFIG - Add your device authorization details
@@ -188,6 +204,8 @@ if __name__ == "__main__":
 
     # New connection to RaspberryPi
     deviceConnection = Connection(host, port, user, password)
+
+    # Directory containing media files
     mediaDirectory = "/home/pi/Videos"
 
     # Start playback
