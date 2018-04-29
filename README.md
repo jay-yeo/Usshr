@@ -7,17 +7,17 @@ A simple script to play and control media on the RaspberryPi over SSH.
 These instructions will get you a copy of the project up and running on your local machine. Before you get started, make sure you have SSH running on the Raspberry Pi and have your access credentials ready.  
 
 ### Prerequisites
-Installed on Raspbian is a command line media player, called OMXPlayer. As of Raspian(Wheezy), OMXPlayer comes pre-bundled, however, for systems running older versions of Raspian, you may install OMXPlayer using the following command:
+Installed on Raspbian is a command line media player, called OMXPlayer. 
 
 First check to see if OMXPlayer is installed:
 
    ```omxplayer --version```
 
-If OMXPlayer is not installed, please do so using the command:
+As of Raspian(Wheezy), OMXPlayer comes pre-bundled, however, for systems running older versions of Raspian, you may install OMXPlayer using the following command:
 
 ```sudo apt-get install omxplayer```
 
-Please check that the following python packages have been installed:
+Lastly, please make sure the following python packages have been installed:
 
 `sudo pip install paramiko`
 
