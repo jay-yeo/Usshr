@@ -46,9 +46,21 @@ mediaDirectory = "/your/custom/directory"
 
 ## Using Usshr
 
-Inside your deployed directory, enter the following command in the terminal:
+Inside your deployed directory, enter the following command in the terminal to start Usshr script:
 
 ```python3 Usshr.py```
+
+The script will launch in the terminal with the main menu. Functions and playback controls can be accessed using basic keystrokes from the terminal.
+
+```
+Usshr - Theatre
+------------------
+[x] Start Projector
+[l] List Movies
+[q] Quit
+
+Enter Command:
+```
 
 ## Built With
 
@@ -61,8 +73,4 @@ Inside your deployed directory, enter the following command in the terminal:
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* The Most High
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
