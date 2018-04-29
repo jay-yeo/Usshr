@@ -15,6 +15,7 @@ class Connection:
         self.user = username
         self.pwd = password
 
+
 # SSH Messaging Functions Class
 class Messenger:
 
@@ -72,12 +73,48 @@ class Player:
         self.cnx = Connection
         self.messenger = Messenger(self.cnx)
 
+    def playback(self):
+
+        command = ""
+
+        # Start a loop that runs until the user enters the value for 'quit'.
+        while command != 'q':
+
+            # Give all the choices in a series of print statements.
+            print('[x] Start Projector')
+            print('[l] List Movies')
+            print('[q] Quit')
+
+            # Ask for the user's choice.
+            command = input('Command: ')
+
+            # List Movies
+            if command == 'l':
+                list_string = "find *.mkv *.mp4 /home/pi/Videos "
+                movie_list = self.messenger.sendReply(list_string)
+                print('All Movies:')
+                if '.mkv' or '.mp4' in movie_list:
+                    for movie in movie_list:
+                        print(movie)
+
+            # Play Movies
+            elif command == 'x':
+                movie = input('Enter Movie: ')
+                print('Starting "' + str(movie) + '"')
+                self.play(movie)
+            # Quit
+            elif command == 'q':
+                print('Goodbye!')
+                break
+            # Incorrect Command
+            else:
+                print('Incorrect Command')
 
     # Play Function
     def play(self, videoURL):
 
-        #play_string = 'omxplayer --no-keys -o hdmi -b ' + '"' + str(videoURL) + '" &'
-        self.messenger.send(videoURL)
+        play_string = 'omxplayer --no-keys -o hdmi -b ' + '"' + str(videoURL) + '" &'
+        self.messenger.send(play_string)
         self.playbackControls()
 
     # Terminal Playback Controls
@@ -110,7 +147,8 @@ class Player:
             else:
                 print("Incorrect Command")
 
-#Run Script
+
+# Run Script
 if __name__ == "__main__":
     print("Usshr - Theatre")
 
@@ -120,40 +158,9 @@ if __name__ == "__main__":
     user = "pi"
     password = "Budap3st1!"
 
-    piConnection = Connection(host, port, user, password)
+    # New connection to RaspberryPi
+    deviceConnection = Connection(host, port, user, password)
 
-    Player(piConnection).play("video")
+    # Start playback
+    Player(deviceConnection).playback()
 
-    # Start a loop that runs until the user enters the value for 'quit'.
-    # while command != 'q':
-    #
-    #     # Give all the choices in a series of print statements.
-    #     print('[x] Start Projector')
-    #     print('[l] List Movies')
-    #     print('[q] Quit')
-    #
-    #     # Ask for the user's choice.
-    #     command = input('Command: ')
-    #
-    #     # List Movies
-    #     if command == 'l':
-    #         list_string = "find *.mkv *.mp4 /media/pi/VIDEO/ "
-    #         movie_list = sshMessenger(cxDetails, list_string,reply=True)
-    #         print('All Movies:')
-    #         if '.mkv' or '.mp4' in movie_list:
-    #         for movie in movie_list:
-    #             print(movie)
-    #         print(movie_list)
-    #     # Play Movies
-    #     elif command == 'x':
-    #         movie = raw_input('Enter Movie: ')
-    #         print('Starting "' + str(movie) + '"')
-    #         play(movie)
-    #         playbackCTRL()
-    #     # Quit
-    #     elif command == 'q':
-    #         print('Goodbye!')
-    #         break
-    #     # Incorrect Command
-    #     else:
-    #         print('Incorrect Command')
