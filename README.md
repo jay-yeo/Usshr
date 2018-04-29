@@ -7,13 +7,13 @@ A simple script to play and control media on the RaspberryPi over SSH.
 These instructions will get you a copy of the project up and running on your local machine. Before you get started, make sure you have SSH running on the Raspberry Pi and have your access credentials ready.  
 
 ### Prerequisites
-Installed on Raspbian is a command line media player, called OMXPlayer. 
+Installed on Raspbian is a command line media player called OMXPlayer. 
 
-First check to see if OMXPlayer is installed:
+Check to see if OMXPlayer is installed:
 
    ```omxplayer --version```
 
-As of Raspian(Wheezy), OMXPlayer comes pre-bundled, however, for systems running older versions of Raspian, you may install OMXPlayer using the following command:
+As of Raspian "Wheezy", OMXPlayer now comes pre-bundled. However, for systems running older versions of Raspian, you may install OMXPlayer using the following command:
 
 ```sudo apt-get install omxplayer```
 
@@ -36,7 +36,7 @@ Using your favourite text editor, please open `Usshr.py` and edit the file to in
     password = "password"    
 ```
 
-Usshr has been configured to use the default `/home/pi/Videos` directory to search for video files. To change this to a custom directory, please edit the following line of code:
+Usshr has been configured to use the default `/home/pi/Videos` directory to search for video files. To change this to a custom directory, please edit the following line of code in `Usshr.py`:
 
 
 ```
@@ -46,11 +46,11 @@ mediaDirectory = "/your/custom/directory"
 
 ## Using Usshr
 
-Inside your deployed directory, enter the following command in the terminal to start Usshr script:
+Inside your deployed directory, use the following command in the terminal to start Usshr script:
 
 ```python3 Usshr.py```
 
-The script will launch in the terminal with the main menu. Functions and playback controls can be accessed using basic keystrokes from the terminal.
+The script will launch in the terminal, displaying the main menu. Functions and playback controls can be accessed using basic keystrokes from the terminal.
 
 ```
 Usshr - Theatre
@@ -66,7 +66,7 @@ Enter Command:
 
 * [paramiko](http://www.paramiko.org/) - A Python implementation of SSHv2. 
 
-## Authors
+## Author
 
 * **Jay Yeo** - *Initial work* - [jay-yeo](https://github.com/jay-yeo)
 
