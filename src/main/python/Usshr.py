@@ -154,16 +154,16 @@ class Player:
             self.playlist.clear()
 
             # Get directory list
-            list_string = "ls " + self.directory + " *.mkv *.mp4"
+            list_string = "ls " + self.directory + " *.mkv *.mp4 *.avi *.mov .m4v"
             movie_list = self.messenger.sendReply(list_string)
 
-
-            # Get list of video files
-            for index, movie in enumerate(movie_list):
-                # Skip first entry which is the directory url - eg. "/home/pi/Videos"
-                if index > 0:
-                    movieDetails = {"id": index, "movieURI": re.sub('\n', '', movie), "movieFile": os.path.basename(re.sub('\n', '', movie))}
-                    self.playlist.append(movieDetails)
+            if movie_list:
+                # Get list of video files
+                for index, movie in enumerate(movie_list):
+                    # Skip first entry which is the directory url - eg. "/home/pi/Videos"
+                    if index > 0:
+                        movieDetails = {"id": index, "movieURI": re.sub('\n', '', movie), "movieFile": os.path.basename(re.sub('\n', '', movie))}
+                        self.playlist.append(movieDetails)
 
             # Display list of video files
             print('\nAll Movies:')
@@ -175,7 +175,6 @@ class Player:
                 print("No playable files in directory...")
 
             print('\n------------------')
-            return self.playlist
 
     def playMovie(self):
         playable = False

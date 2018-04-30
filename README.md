@@ -24,7 +24,7 @@ Lastly, please make sure the following python packages have been installed:
 
 ### Installing
 
-To install, zip or clone the project to a directory of your choice.
+To install, zip or clone the project to the directory of your choice.
 
 Using your favourite text editor, please open `Usshr.py` and edit the file to include your SSH access credentials.
 
